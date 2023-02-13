@@ -104,6 +104,53 @@ void DHT11sensor() {
 
 }
 
+//Get the PIR sensor values
+void pirsensor() {
+  int val=0;
+  val = digitalRead(PIR); // IR Sensor output pin connected to D6 
+  //Serial.println(val);  // see the value in serial m0nitor in Arduino IDE  
+  delay(100);      // for timer  
+  if (pirbutton == 1) 
+  {
+    if(val == 0 )  
+    { 
+    Blynk.logEvent("security");  
+    digitalWrite(Buzzer, HIGH);
+    digitalWrite(relay1,LOW);
+    Blynk.virtualWrite(V5, 1);
+    Blynk.virtualWrite(V7, 1);
+    Serial.print("  ");
+    Serial.print("Motion Detected");
+    Serial.print("  ");
+    }  
+    else  
+    {  
+    digitalWrite(Buzzer, LOW);
+    Blynk.virtualWrite(V7, 0);
+    }
+  }
+}
+
+//Get the ultrasonic sensor values
+void ultrasonic() {
+  digitalWrite(trig, LOW);
+  delayMicroseconds(4);
+  digitalWrite(trig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig, LOW);
+  long t = pulseIn(echo, HIGH);
+  long cm = t / 29 / 2;
+  Blynk.virtualWrite(V4, cm);
+
+    if (cm <=10)
+    {
+     Blynk.logEvent("reserver_level");
+     Serial.print("Reserver OverFlow!!  ");
+     Serial.print(cm);
+     Serial.print(" cm  ");
+    }
+
+}
 
 //Get buttons values
 BLYNK_WRITE(V5) {
