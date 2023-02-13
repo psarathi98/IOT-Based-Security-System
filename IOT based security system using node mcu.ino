@@ -106,14 +106,14 @@ void DHT11sensor() {
 
 
 //Get buttons values
-BLYNK_WRITE(V5) {
+/*BLYNK_WRITE(V5) {
  bool RelayOne = param.asInt();
   if (RelayOne == 1) {
     digitalWrite(relay1, LOW);
   } else {
     digitalWrite(relay1, HIGH);
   }
-}
+}*/
 
 //Get buttons values
 BLYNK_WRITE(V6) {
