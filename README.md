@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # IOT based Advanced Security System.
 ## _It can be implemented in industry_
 
@@ -31,5 +31,3 @@ Fully automated & Customized system With advance security alert.
 
 
 
-
-========
