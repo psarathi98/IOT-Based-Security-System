@@ -84,38 +84,7 @@ void setup() {
 #define IFTTT_Value1 String(h);
 #define IFTTT_Value2 String(t);
 #define IFTTT_Value3 String(value);
-void send_webhook(){
-  // construct the JSON payload
-  String jsonString = "";
-  jsonString += "{\"value1\":\"";
-  jsonString += IFTTT_Value1;
-  jsonString += "\",\"value2\":\"";
-  jsonString += IFTTT_Value2;
-  jsonString += "\",\"value3\":\"";
-  jsonString += IFTTT_Value3;
-  jsonString += "\"}";
-  int jsonLength = jsonString.length();  
-  String lenString = String(jsonLength);
-  // connect to the Maker event server
-  client.connect("maker.ifttt.com", 80);
-  // construct the POST request
-  String postString = "";
-  postString += "POST /trigger/";
-  postString += IFTTT_Event;
-  postString += "/with/key/";
-  postString += IFTTT_Key;
-  postString += " HTTP/1.1\r\n";
-  postString += "Host: maker.ifttt.com\r\n";
-  postString += "Content-Type: application/json\r\n";
-  postString += "Content-Length: ";
-  postString += lenString + "\r\n";
-  postString += "\r\n";
-  postString += jsonString; // combine post request and JSON
-  
-  client.print(postString);
-  delay(500);
-  client.stop();
-}
+
 //Get the MQ2 sensor values
 void gassensor() {
   value = analogRead(MQ2);
