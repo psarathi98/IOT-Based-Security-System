@@ -26,8 +26,13 @@ Fully automated & Customized system With advance security alert.
 ## Components Used :
 - ESP8266 Microcontroller
 - DHT11 Temparature and Humidity sensor
+- Ultrasonic Sensor
 - MQ5 LPG Gas sensor
 - IR Module
-
+- 5 volt 2 channel Relay Module
+- Led
+- Buzzer
+- Jumper Wires
+- Breadboard
 
 
