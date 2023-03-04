@@ -1,4 +1,3 @@
-
 //IOT based Advanced Industrial Security System
 
 //Include the library files
@@ -7,22 +6,22 @@
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 #include <DHT.h>
-#include <WiFiClientSecure.h>
-
+WiFiClient client;
 
 //Blynk Template and authorization Token Declaration
+#define WIFI_SSID ""  //Enter your wifi credential here
+#define WIFI_PASS ""
 
-#define BLYNK_TEMPLATE_ID ""
+#define BLYNK_TEMPLATE_ID ""                //Copy template from blynk device
 #define BLYNK_TEMPLATE_NAME ""
 #define BLYNK_AUTH_TOKEN ""
+#define IFTTT_Key "" //Enter IFTTT Key here
+#define IFTTT_Event "security" // or whatever you have chosen
 
 //Wifi Credintial
-char auth[] = "";//Enter your Auth token
+char auth[] = "";//Enter your Blynk Auth token
 char ssid[] = "";//Enter your WIFI name
 char pass[] = "";//Enter your WIFI password
-
-const char* host ="script.google.com";
-const int httpsPort = 443;
 
 
 DHT dht(D3, DHT11); //(sensor pin,sensor type)
@@ -43,6 +42,8 @@ BLYNK_WRITE(V0) {
   pirbutton = param.asInt();
 }
 
+float h,t;
+int value;
 void setup() {
   Serial.begin(9600);
   pinMode(Buzzer, OUTPUT);
@@ -55,8 +56,24 @@ void setup() {
   digitalWrite(relay2, HIGH);
   Blynk.begin(auth, ssid, pass, "blynk.cloud", 80);
   dht.begin();
-
   Serial.println("System Booted");
+
+ //wifi setup
+ WiFi.begin(WIFI_SSID, WIFI_PASS); 
+  // Connecting to WiFi...
+  Serial.print("Connecting to ");
+  Serial.print(WIFI_SSID);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(100);
+    Serial.print(".");
+  }
+ 
+  // Connected to WiFi 
+  Serial.println();
+  Serial.print("Connected! IP address: ");
+  Serial.println(WiFi.localIP());
+
 
 //Call the functions
   timer.setInterval(100L, gassensor);
@@ -64,15 +81,50 @@ void setup() {
   timer.setInterval(100L, pirsensor);
   timer.setInterval(100L, ultrasonic);
 }
-
+#define IFTTT_Value1 String(h);
+#define IFTTT_Value2 String(t);
+#define IFTTT_Value3 String(value);
+void send_webhook(){
+  // construct the JSON payload
+  String jsonString = "";
+  jsonString += "{\"value1\":\"";
+  jsonString += IFTTT_Value1;
+  jsonString += "\",\"value2\":\"";
+  jsonString += IFTTT_Value2;
+  jsonString += "\",\"value3\":\"";
+  jsonString += IFTTT_Value3;
+  jsonString += "\"}";
+  int jsonLength = jsonString.length();  
+  String lenString = String(jsonLength);
+  // connect to the Maker event server
+  client.connect("maker.ifttt.com", 80);
+  // construct the POST request
+  String postString = "";
+  postString += "POST /trigger/";
+  postString += IFTTT_Event;
+  postString += "/with/key/";
+  postString += IFTTT_Key;
+  postString += " HTTP/1.1\r\n";
+  postString += "Host: maker.ifttt.com\r\n";
+  postString += "Content-Type: application/json\r\n";
+  postString += "Content-Length: ";
+  postString += lenString + "\r\n";
+  postString += "\r\n";
+  postString += jsonString; // combine post request and JSON
+  
+  client.print(postString);
+  delay(500);
+  client.stop();
+}
 //Get the MQ2 sensor values
 void gassensor() {
-  int value = analogRead(MQ2);
+  value = analogRead(MQ2);
   value = map(value, 0, 1024, 0, 100);
   if (value <= 55) {
     digitalWrite(Buzzer, LOW);
   } else if (value > 55) {
     Blynk.logEvent("gas_leakage");
+    send_webhook();
     digitalWrite(Buzzer, HIGH);
   }
   Blynk.virtualWrite(V1, value);
@@ -84,8 +136,8 @@ void gassensor() {
 
 //Get the DHT11 sensor values
 void DHT11sensor() {
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
+   h = dht.readHumidity();
+   t = dht.readTemperature();
 
   if (isnan(h) || isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
@@ -114,7 +166,8 @@ void pirsensor() {
   {
     if(val == 0 )  
     { 
-    Blynk.logEvent("security");  
+    Blynk.logEvent("security"); 
+    send_webhook(); 
     digitalWrite(Buzzer, HIGH);
     digitalWrite(relay1,LOW);
     Blynk.virtualWrite(V5, 1);
@@ -145,6 +198,7 @@ void ultrasonic() {
     if (cm <=10)
     {
      Blynk.logEvent("reserver_level");
+     send_webhook();
      Serial.print("Reserver OverFlow!!  ");
      Serial.print(cm);
      Serial.print(" cm  ");
@@ -175,6 +229,5 @@ BLYNK_WRITE(V6) {
 void loop() {
   Blynk.run();//Run the Blynk library
   timer.run();//Run the Blynk timer
-
- 
+  
 }
