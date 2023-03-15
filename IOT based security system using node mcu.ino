@@ -17,20 +17,19 @@
 WiFiClient client;
 
 //Blynk Template and authorization Token Declaration
-#define WIFI_SSID ""   //Enter your WIFI name
-#define WIFI_PASS ""  //Enter your WIFI password
+#define WIFI_SSID "Redmi Note 7"
+#define WIFI_PASS "Swarnali24"
 
-//Copy your Blynk Template
-#define BLYNK_TEMPLATE_ID ""
-#define BLYNK_TEMPLATE_NAME ""
-#define BLYNK_AUTH_TOKEN ""
-#define IFTTT_Key ""            //Enter your IFTTT Key
-#define IFTTT_Event ""         // IFTTT Event name
+#define BLYNK_TEMPLATE_ID "TMPLXvZ9I-j0"
+#define BLYNK_TEMPLATE_NAME "ADVANCED SECURITY FOR INDUSTRY"
+#define BLYNK_AUTH_TOKEN "BcjGP8am6sd_qR3Z9v6Scvs72U7b9eTu"
+#define IFTTT_Key "bH7kIH91DiFpIeU45FeFCYe3_e46YwHqXR-icGuOto2"
+#define IFTTT_Event "security" // or whatever you have chosen
 
 //Wifi Credintial
-char auth[] = "";       //Enter your Blynk Auth token
-char ssid[] = "";      //Enter your WIFI name
-char pass[] = "";     //Enter your WIFI password
+char auth[] = "BcjGP8am6sd_qR3Z9v6Scvs72U7b9eTu";//Enter your Auth token
+char ssid[] = "Redmi Note 7";//Enter your WIFI name
+char pass[] = "Swarnali24";//Enter your WIFI password
 
 //Firebase Things:
 // Provide the token generation process info.
@@ -40,14 +39,14 @@ char pass[] = "";     //Enter your WIFI password
 
 
 // Insert Firebase project API Key
-#define API_KEY ""
+#define API_KEY "AIzaSyCfDptaDb6qcItUOUIGLXT6G_nCRTmY68A"
 
 // Insert Authorized Email and Corresponding Password
-#define USER_EMAIL ""
-#define USER_PASSWORD ""
+#define USER_EMAIL "suvam@gmail.com"
+#define USER_PASSWORD "suvamsadhu"
 
 // Insert RTDB URLefine the RTDB URL
-#define DATABASE_URL  ""
+#define DATABASE_URL  "trial2-7818d-default-rtdb.firebaseio.com"
 
 // Define Firebase objects
 FirebaseData fbdo;
